@@ -1,6 +1,5 @@
 # cookie-stand
 
-
 The purpose of this project is create a website for a friends cookie stand business, including branding and internal data management.
 
 ### Author: Tyson F.
@@ -12,4 +11,4 @@ The purpose of this project is create a website for a friends cookie stand busin
 ### Lighthouse Accessibility Report Score
 ## Class-06
 
-* ![Alt text](class-06-Lighthouse.png) 
+* ![Alt text](Class-06.png) 
