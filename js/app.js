@@ -99,7 +99,6 @@ let tokyo = {
     let articleElement = document.createElement('article');
 
     storeSection.appendChild(articleElement);
-    //salesDataElement.appendChild(articleElement);
 
     let storeHeading = document.createElement('h2');
     storeHeading.innerText = this.name;
@@ -150,7 +149,6 @@ let dubai = {
       let articleElement = document.createElement('article');
   
       storeSection.appendChild(articleElement);
-      //salesDataElement.appendChild(articleElement);
   
       let storeHeading = document.createElement('h2');
       storeHeading.innerText = this.name;
@@ -201,7 +199,6 @@ let paris = {
       let articleElement = document.createElement('article');
   
       storeSection.appendChild(articleElement);
-      //salesDataElement.appendChild(articleElement);
   
       let storeHeading = document.createElement('h2');
       storeHeading.innerText = this.name;
@@ -252,7 +249,6 @@ let lima = {
       let articleElement = document.createElement('article');
   
       storeSection.appendChild(articleElement);
-      //salesDataElement.appendChild(articleElement);
   
       let storeHeading = document.createElement('h2');
       storeHeading.innerText = this.name;
