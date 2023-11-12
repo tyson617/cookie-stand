@@ -2,7 +2,7 @@
 
 // **** Global Variables ****
 // *** STEP 1: Grab the window into the DOM ***
-let storeSection = document.getElementById('store-profiles');
+let storeSection = document.getElementById('stores');
 
 console.dir(storeSection);
 
@@ -29,7 +29,7 @@ let seattle = {
   },
 
   simulateHourlySales: function () {
-    for (let hour = 6; hour <= 19; hour++) {
+    for (let hour = 0; hour < Hours.length; hour++) {
       const customers = this.generateRandomCustomers();
       const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
       this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
@@ -49,14 +49,14 @@ let seattle = {
     
 
     // *** Add to DOM ***
-    seattleSection.appendChild(articleElement);
+    storeSection.appendChild(articleElement);
 
-    let seattleHeading = document.createElement('h2');
-    seattleHeading.innerText = this.name;
-    articleElement.appendChild(seattleHeading);
+    let storeHeading = document.createElement('h2');
+    storeHeading.innerText = this.name;
+    articleElement.appendChild(storeHeading);
 
-    let seattleUL = document.createElement('ul');
-    articleElement.appendChild(seattleUL);
+    let salesList = document.createElement('ul');
+    articleElement.appendChild(salesList);
 
     this.salesData.forEach((sales) => {
       let salesLI = document.createElement('li');
@@ -66,7 +66,7 @@ let seattle = {
     
     let totalCookies = document.createElement('p');
     totalCookies.innerText = `Total: ${this.calculateTotalCookies()} cookies`;
-    locationArticle.appendChild(totalCookies);
+    articleElement.appendChild(totalCookies);
   },
 };
 
@@ -80,7 +80,7 @@ let tokyo = {
     return Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1) + this.minCustomers);
   },
   simulateHourlySales: function () {
-    for (let hour = 6; hour <= 19; hour++) {
+    for (let hour = 0; hour < Hours.length; hour++) {
       const customers = this.generateRandomCustomers();
       const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
       this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
@@ -98,11 +98,12 @@ let tokyo = {
 
     let articleElement = document.createElement('article');
 
-    salesDataElement.appendChild(articleElement);
+    storeSection.appendChild(articleElement);
+    //salesDataElement.appendChild(articleElement);
 
-    let locationHeading = document.createElement('h2');
-    locationHeading.innerText = this.name;
-    articleElement.appendChild(locationHeading);
+    let storeHeading = document.createElement('h2');
+    storeHeading.innerText = this.name;
+    articleElement.appendChild(storeHeading);
 
     let salesList = document.createElement('ul');
     articleElement.appendChild(salesList);
@@ -130,7 +131,7 @@ let dubai = {
   },
 
   simulateHourlySales: function () {
-    for (let hour = 6; hour <= 19; hour++) {
+    for (let hour = 0; hour < Hours.length; hour++) {
       const customers = this.generateRandomCustomers();
       const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
       this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
@@ -148,11 +149,12 @@ let dubai = {
   
       let articleElement = document.createElement('article');
   
-      salesDataElement.appendChild(articleElement);
+      storeSection.appendChild(articleElement);
+      //salesDataElement.appendChild(articleElement);
   
-      let locationHeading = document.createElement('h2');
-      locationHeading.innerText = this.name;
-      articleElement.appendChild(locationHeading);
+      let storeHeading = document.createElement('h2');
+      storeHeading.innerText = this.name;
+      articleElement.appendChild(storeHeading);
   
       let salesList = document.createElement('ul');
       articleElement.appendChild(salesList);
@@ -180,7 +182,7 @@ let paris = {
   },
 
   simulateHourlySales: function () {
-    for (let hour = 6; hour <= 19; hour++) {
+    for (let hour = 0; hour < Hours.length; hour++) {
       const customers = this.generateRandomCustomers();
       const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
       this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
@@ -198,11 +200,12 @@ let paris = {
   
       let articleElement = document.createElement('article');
   
-      salesDataElement.appendChild(articleElement);
+      storeSection.appendChild(articleElement);
+      //salesDataElement.appendChild(articleElement);
   
-      let locationHeading = document.createElement('h2');
-      locationHeading.innerText = this.name;
-      articleElement.appendChild(locationHeading);
+      let storeHeading = document.createElement('h2');
+      storeHeading.innerText = this.name;
+      articleElement.appendChild(storeHeading);
   
       let salesList = document.createElement('ul');
       articleElement.appendChild(salesList);
@@ -230,7 +233,7 @@ let lima = {
   },
 
   simulateHourlySales: function () {
-    for (let hour = 6; hour <= 19; hour++) {
+    for (let hour = 0; hour < Hours.length; hour++) {
       const customers = this.generateRandomCustomers();
       const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
       this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
@@ -248,11 +251,12 @@ let lima = {
   
       let articleElement = document.createElement('article');
   
-      salesDataElement.appendChild(articleElement);
+      storeSection.appendChild(articleElement);
+      //salesDataElement.appendChild(articleElement);
   
-      let locationHeading = document.createElement('h2');
-      locationHeading.innerText = this.name;
-      articleElement.appendChild(locationHeading);
+      let storeHeading = document.createElement('h2');
+      storeHeading.innerText = this.name;
+      articleElement.appendChild(storeHeading);
   
       let salesList = document.createElement('ul');
       articleElement.appendChild(salesList);
