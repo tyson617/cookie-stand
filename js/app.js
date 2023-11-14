@@ -1,15 +1,69 @@
 `use strict`
 
 // **** Global Variables ****
-// *** STEP 1: Grab the window into the DOM ***
+
+const storesArray = [];
 let storeSection = document.getElementById('stores');
 
 console.dir(storeSection);
 
-// **** Helper Functions or Utilities ****
+//Helper Functions
 
-// **** HELPFUL START FOR LAB ****
-// !!! HELPFUL FOR LAB
+function renderAll(){
+  for(let i = 0; i < storesArray.length; i++){
+    storesArray[i].render();
+  }
+};
+
+// **** Constructor Function ****
+
+function Stores(name, minCustomers, maxCustomers, avgCookiesPerCustomer, salesData) {
+  this.name = name;
+  this.minCustomers = minCustomers;
+  this.maxCustomers = maxCustomers;
+  this.avgCookiesPerCustomer = avgCookiesPerCustomer;
+  this.salesData = salesData;
+};
+
+// **** Prototype Methods ****
+
+Stores.prototype.generateRandomCustomers = function(min, max) {
+  return Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1) + this.minCustomers);
+};
+
+Stores.prototype.simulateHourlySales = 
+function () {
+  for (let hour = 0; hour < Hours.length; hour++) {
+    const customers = this.generateRandomCustomers();
+    const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
+    this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
+  }
+};
+
+Stores.prototype.render = function(){
+  this.simulateHourlySales();
+
+  let articleElement = document.createElement('article');
+  
+  storeSection.appendChild(articleElement);
+
+  let storeHeading = document.createElement('h2');
+  storeHeading.innerText = this.name;
+  articleElement.appendChild(storeHeading);
+
+  let salesList = document.createElement('ul');
+  articleElement.appendChild(salesList);
+
+  this.salesData.forEach((sales) => {
+    let salesLI = document.createElement('li');
+    salesLI.innerText = sales;
+    salesList.appendChild(salesLI);
+  });
+  
+  let totalCookies = document.createElement('p');
+  totalCookies.innerText = `Total: ${this.calculateTotalCookies()} cookies`;
+  articleElement.appendChild(totalCookies);
+};
 
 let Hours = ['6am', '7am', '8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm', '7pm'];
 
@@ -271,17 +325,32 @@ let lima = {
 
 // **** Executable (executes on page load) Code ****
 
-seattle.render();
+let seattle = new Stores('Seattle', 23, 65, 6.3, []);
 console.log(seattle);
 
-tokyo.render();
-console.log(tokyo);
+let tokyo = new Stores('Tokyo', 3, 24, 1.2, []);
 
-dubai.render();
-console.log(dubai);
+let dubai = new Stores('Dubai', 11, 38, 3.7, []);
 
-paris.render();
-console.log(paris);
+let paris = new Stores('Paris', 20, 38, 2.3, []);
 
-lima.render();
-console.log(lima);
+let lima = new Stores('Lima', 2, 16, 4.6, []);
+
+storesArray.push(seattle, tokyo, dubai, paris, lima);
+
+renderAll();
+
+//seattle.render();
+//console.log(seattle);
+
+//tokyo.render();
+//console.log(tokyo);
+
+//dubai.render();
+//console.log(dubai);
+
+//paris.render();
+//console.log(paris);
+
+//lima.render();
+//console.log(lima);
