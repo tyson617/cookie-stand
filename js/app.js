@@ -1,21 +1,13 @@
-`use strict`
+'use strict';
 
 // **** Global Variables ****
 
 const storesArray = [];
+const storeSection = document.getElementById('sales');
 
-let storeSection = document.getElementById('stores');
+// **** Hours Array ****
 
-console.dir(storeSection);
-
-// *** Helper Functions ***
-
-
-function renderAll(){
-  for(let i = 0; i < storesArray.length; i++){
-    storesArray[i].render();
-  }
-};
+const Hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
 
 // **** Constructor Function ****
 
@@ -34,8 +26,7 @@ Stores.prototype.generateRandomCustomers = function () {
   return Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1) + this.minCustomers);
 };
 
-Stores.prototype.simulateHourlySales = 
-function () {
+Stores.prototype.simulateHourlySales = function () {
   for (let hour = 0; hour < this.hours.length; hour++) {
     const customers = this.generateRandomCustomers();
     const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
@@ -50,75 +41,74 @@ Stores.prototype.calculateTotalCookies = function () {
   }, 0);
 };
 
-Stores.prototype.render = function(){
+Stores.prototype.render = function () {
   this.simulateHourlySales();
 
-  let articleElement = document.createElement('article');
-  
-  storeSection.appendChild(articleElement);
+  let table = document.createElement('table');
+  storeSection.appendChild(table);
 
-  let storeHeading = document.createElement('h2');
-  storeHeading.innerText = this.name;
-  articleElement.appendChild(storeHeading);
-
-  let salesTable = document.createElement('table');
-  articleElement.appendChild(salesTable);
-
-  this.renderTableHeader(salesTable);
-
-  let salesList = document.createElement('ul');
-  articleElement.appendChild(salesList);
-
-  this.salesData.forEach((sales) => {
-    let salesLI = document.createElement('li');
-    salesLI.innerText = sales;
-    salesList.appendChild(salesLI);
-  });
-  
-  let totalCookies = document.createElement('p');
-  totalCookies.innerText = `Total: ${this.calculateTotalCookies()} cookies`;
-  articleElement.appendChild(totalCookies);
+  this.renderTableHeader(table);
+  this.renderTableRow(table);
+  this.renderTableFooter(table);
 };
 
-let Hours = ['6am', '7am', '8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm', '7pm'];
-
-// *** Add Table ***
-
-Stores.prototype.renderTableHeader = function(storeTable) {
-  let tableHeader = document.createElement('thead');
+Stores.prototype.renderTableHeader = function (table) {
   let headerRow = document.createElement('tr');
+  table.appendChild(headerRow);
 
-  headerRow.appendChild(document.createElement('th'));
+  let headerCell = document.createElement('th');
+  headerRow.appendChild(headerCell);
 
-  for (let hour of this.hours) {
+  for (let i = 0; i < this.hours.length; i++) {
     let headerCell = document.createElement('th');
-    headerCell.innerText = hour;
+    headerCell.textContent = this.hours[i];
     headerRow.appendChild(headerCell);
   }
 
-  headerRow.appendChild(document.createElement('th')).innerText = 'Daily Location Total';
-
-  tableHeader.appendChild(headerRow);
-  storeTable.appendChild(tableHeader);
+  let totalHeaderCell = document.createElement('th');
+  totalHeaderCell.textContent = 'Daily Location Total';
+  headerRow.appendChild(totalHeaderCell);
 };
 
-Stores.prototype.renderTableRow = function(storeTable) {
-  let tableRow = document.createElement('tr');
+Stores.prototype.renderTableRow = function (table) {
+  let row = document.createElement('tr');
+  table.appendChild(row);
 
-  tableRow.appendChild(document.createElement('td')).innerText = this.name;
+  let nameCell = document.createElement('td');
+  nameCell.textContent = this.name;
+  row.appendChild(nameCell);
 
-  for (let hour of this.hours) {
-    let cell = document.createElement('td');
-    cell.innerText = this.getSalesDataForHour(hour);
-    tableRow.appendChild(cell);
+  for (let i = 0; i < this.hours.length; i++) {
+    let dataCell = document.createElement('td');
+    dataCell.textContent = this.getSalesDataForHour(this.hours[i]);
+    row.appendChild(dataCell);
   }
 
-  tableRow.appendChild(document.createElement('td')).innerText = this.calculateTotalCookies();
-
-  storeTable.appendChild(tableRow);
+  let totalCell = document.createElement('td');
+  totalCell.textContent = this.calculateTotalCookies();
+  row.appendChild(totalCell);
 };
 
-Stores.prototype.getSalesDataForHour = function(hour) {
+Stores.prototype.renderTableFooter = function (table) {
+  let footerRow = document.createElement('tr');
+  table.appendChild(footerRow);
+
+  let footerCell = document.createElement('td');
+  footerCell.textContent = 'Total';
+  footerRow.appendChild(footerCell);
+
+  for (let hour of this.hours) {
+    let footerCell = document.createElement('td');
+    footerCell.textContent = this.calculateHourlyTotal(hour);
+    footerRow.appendChild(footerCell);
+  }
+
+  let grandTotalCell = document.createElement('td');
+  grandTotalCell.textContent = this.calculateGrandTotal();
+  footerRow.appendChild(grandTotalCell);
+};
+
+Stores.prototype.getSalesDataForHour = function (hour) {
   for (let salesEntry of this.salesData) {
     if (salesEntry.startsWith(hour)) {
       return salesEntry.split(': ')[1].trim();
@@ -127,146 +117,53 @@ Stores.prototype.getSalesDataForHour = function(hour) {
   return '';
 };
 
-// **** Object Literals ****
-
-//let seattle = {
-//  name: 'Seattle',
-//  minCustomers: 23,
-//  maxCustomers: 65,
-//  avgCookiesPerCustomer: 6.3,
-//  salesData: [],
-//  generateRandomCustomers: function(min, max) {
-//    return Math.floor(Math.random() * (this.maxCustomers - this.minCustomers + 1) + this.minCustomers);
-//  },
-
-//  simulateHourlySales: function () {
-//    for (let hour = 0; hour < Hours.length; hour++) {
-//      const customers = this.generateRandomCustomers();
-//      const cookiesSold = Math.round(customers * this.avgCookiesPerCustomer);
-//      this.salesData.push(`${hour}am: ${cookiesSold} cookies`);
-//    }
-//  },
-//  calculateTotalCookies: function () {
-//    return this.salesData.reduce((acc, sales) => {
-//      const cookies = parseInt(sales.split(' ')[1]);
-//      return acc + cookies;
-//    }, 0);
-//  },
-
-//  render: function(){
-//    this.simulateHourlySales();
-
-//    let articleElement = document.createElement('article');
-    
-
-    // *** Add to DOM ***
-//    storeSection.appendChild(articleElement);
-
-//    let storeHeading = document.createElement('h2');
-//    storeHeading.innerText = this.name;
-//    articleElement.appendChild(storeHeading);
-
-//    let salesList = document.createElement('ul');
-//    articleElement.appendChild(salesList);
-
-//    this.salesData.forEach((sales) => {
-//      let salesLI = document.createElement('li');
-//      salesLI.innerText = sales;
-//      salesList.appendChild(salesLI);
-//    });
-    
-//    let totalCookies = document.createElement('p');
-//    totalCookies.innerText = `Total: ${this.calculateTotalCookies()} cookies`;
-//    articleElement.appendChild(totalCookies);
-//  },
-//};
-
-// *** Create Table ***
-
-function renderTableHeader(storeTable) {
-  let tableHeader = document.createElement('thead');
-  let headerRow = document.createElement('tr');
-
-  headerRow.appendChild(document.createElement('th'));
-
-  for (let hour of Hours) {
-    let headerCell = document.createElement('th');
-    headerCell.innerText = hour;
-    headerRow.appendChild(headerCell);
-  }
-
-  headerRow.appendChild(document.createElement('th')).innerText = 'Daily Location Total';
-
-  tableHeader.appendChild(headerRow);
-  storeTable.appendChild(tableHeader);
-}
-
-function renderTableFooter(storeTable) {
-  let tableFooter = document.createElement('tfoot');
-  let footerRow = document.createElement('tr');
-
-  footerRow.appendChild(document.createElement('td'));
-
-  for (let hour of Hours) {
-    let footerCell = document.createElement('td');
-    footerCell.innerText = calculateHourlyTotal(hour);
-    footerRow.appendChild(footerCell);
-  }
-
-  footerRow.appendChild(document.createElement('td')).innerText = calculateGrandTotal();
-
-  tableFooter.appendChild(footerRow);
-  storeTable.appendChild(tableFooter);
-}
-
-function calculateHourlyTotal(hour) {
+Stores.prototype.calculateHourlyTotal = function (hour) {
   let total = 0;
   for (let store of storesArray) {
-      total += store.getSalesDataForHour(hour) !== '' ? parseInt(store.getSalesDataForHour(hour)) : 0;
+    total += store.getSalesDataForHour(hour) !== '' ? parseInt(store.getSalesDataForHour(hour)) : 0;
   }
   return total;
-}
+};
 
-function calculateGrandTotal() {
+Stores.prototype.calculateGrandTotal = function () {
   let grandTotal = 0;
   for (let store of storesArray) {
-      grandTotal += store.calculateTotalCookies();
+    grandTotal += store.calculateTotalCookies();
   }
   return grandTotal;
-}
+};
 
 // **** Executable (executes on page load) Code ****
 
-let seattle = new Stores('Seattle', 23, 65, 6.3, [], Hours);
-console.log(seattle);
+document.addEventListener('DOMContentLoaded', function () {
 
-let tokyo = new Stores('Tokyo', 3, 24, 1.2, [], Hours);
-console.log(tokyo);
+  let seattle = new Stores('Seattle', 23, 65, 6.3, [], Hours);
+  let tokyo = new Stores('Tokyo', 3, 24, 1.2, [], Hours);
+  let dubai = new Stores('Dubai', 11, 38, 3.7, [], Hours);
+  let paris = new Stores('Paris', 20, 38, 2.3, [], Hours);
+  let lima = new Stores('Lima', 2, 16, 4.6, [], Hours);
 
-let dubai = new Stores('Dubai', 11, 38, 3.7, [], Hours);
-console.log(dubai);
+  storesArray.push(seattle, tokyo, dubai, paris, lima);
 
-let paris = new Stores('Paris', 20, 38, 2.3, [], Hours);
-console.log(paris);
+  // seattle.render();
+  // tokyo.render();
+  // dubai.render();
+  // paris.render();
+  // lima.render();
 
-let lima = new Stores('Lima', 2, 16, 4.6, [], Hours);
-console.log(lima);
+  for (let store of storesArray) {
+    store.simulateHourlySales();
+  }
 
-storesArray.push(seattle, tokyo, dubai, paris, lima);
+  let table = document.createElement('table');
+  storeSection.appendChild(table);
 
-let storeTable = document.createElement('table');
-storeSection.appendChild(storeTable);
+  // Render header only once
+  seattle.renderTableHeader(table);
 
-renderTableHeader(storeTable);
+  for (let store of storesArray) {
+    store.renderTableRow(table);
+  }
 
-for (let store of storesArray) {
-  store.renderTableRow(storeTable);
-}
-
-renderTableFooter(storeTable);
-
-for (let store of storesArray) {
-  store.renderTableRow(storeTable);
-}
-
-renderAll();
+  seattle.renderTableFooter(table);
+});
