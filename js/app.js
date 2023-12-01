@@ -6,18 +6,19 @@ const storesArray = [];
 const storeSection = document.getElementById('sales');
 
 // **** Hours Array ****
-
 const Hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
 
 // **** Constructor Function ****
 
-function Stores(name, minCustomers, maxCustomers, avgCookiesPerCustomer, salesData, hours) {
+function Stores(name, minCustomers, maxCustomers, avgCookiesPerCustomer, salesData, hours, address, contactInfo) {
   this.name = name;
   this.minCustomers = minCustomers;
   this.maxCustomers = maxCustomers;
   this.avgCookiesPerCustomer = avgCookiesPerCustomer;
   this.salesData = salesData;
   this.hours = hours;
+  this.address = address;
+  this.contactInfo = contactInfo;
 }
 
 // **** Prototype Methods ****
@@ -44,17 +45,17 @@ Stores.prototype.calculateTotalCookies = function () {
 Stores.prototype.render = function () {
   this.simulateHourlySales();
 
-  let table = document.createElement('table');
-  storeSection.appendChild(table);
+  // let table = document.createElement('table');
+  // storeSection.appendChild(table);
 
-  this.renderTableHeader(table);
-  this.renderTableRow(table);
-  this.renderTableFooter(table);
+  this.renderTableHeader();
+  this.renderTableRow();
+  this.renderTableFooter();
 };
 
 Stores.prototype.renderTableHeader = function (table) {
   let headerRow = document.createElement('tr');
-  table.appendChild(headerRow);
+  storeSection.appendChild(headerRow);
 
   let headerCell = document.createElement('th');
   headerRow.appendChild(headerCell);
@@ -70,9 +71,9 @@ Stores.prototype.renderTableHeader = function (table) {
   headerRow.appendChild(totalHeaderCell);
 };
 
-Stores.prototype.renderTableRow = function (table) {
+Stores.prototype.renderTableRow = function () {
   let row = document.createElement('tr');
-  table.appendChild(row);
+  storeSection.appendChild(row);
 
   let nameCell = document.createElement('td');
   nameCell.textContent = this.name;
@@ -89,9 +90,9 @@ Stores.prototype.renderTableRow = function (table) {
   row.appendChild(totalCell);
 };
 
-Stores.prototype.renderTableFooter = function (table) {
+Stores.prototype.renderTableFooter = function () {
   let footerRow = document.createElement('tr');
-  table.appendChild(footerRow);
+  storeSection.appendChild(footerRow);
 
   let footerCell = document.createElement('td');
   footerCell.textContent = 'Total';
@@ -133,32 +134,48 @@ Stores.prototype.calculateGrandTotal = function () {
   return grandTotal;
 };
 
+Stores.prototype.renderDetails = function () {
+  let detailsSection = document.getElementById('details');
+
+  let article = document.createElement('article');
+  detailsSection.appendChild(article);
+
+  let heading = document.createElement('h2');
+  heading.textContent = this.name;
+  article.appendChild(heading);
+
+  let addressPara = document.createElement('p');
+  addressPara.textContent = `Address: ${this.address}`;
+  article.appendChild(addressPara);
+
+  let hoursPara = document.createElement('p');
+  hoursPara.textContent = `Hours Open: ${this.hours[0]} to ${this.hours[this.hours.length - 1]}`;
+  article.appendChild(hoursPara);
+
+  let contactPara = document.createElement('p');
+  contactPara.textContent = `Contact Information: ${this.contactInfo}`;
+  article.appendChild(contactPara);
+}
+
 // **** Executable (executes on page load) Code ****
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  let seattle = new Stores('Seattle', 23, 65, 6.3, [], Hours);
-  let tokyo = new Stores('Tokyo', 3, 24, 1.2, [], Hours);
-  let dubai = new Stores('Dubai', 11, 38, 3.7, [], Hours);
-  let paris = new Stores('Paris', 20, 38, 2.3, [], Hours);
-  let lima = new Stores('Lima', 2, 16, 4.6, [], Hours);
+  let seattle = new Stores('Seattle', 23, 65, 6.3, [], Hours, '123 Main St, Seattle, WA', 'Phone: (555) 123-4567');
+  let tokyo = new Stores('Tokyo', 3, 24, 1.2, [], Hours, '456 Tokyo Ave, Tokyo, Japan', 'Phone: +81 90-1234-5678');
+  let dubai = new Stores('Dubai', 11, 38, 3.7, [], Hours, '789 Desert Rd, Dubai, UAE', 'Phone: +971 50 123 4567');
+  let paris = new Stores('Paris', 20, 38, 2.3, [], Hours, '987 French St, Paris, France', 'Phone: +33 1 23 45 67 89');
+  let lima = new Stores('Lima', 2, 16, 4.6, [], Hours, '654 Coastal Blvd, Lima, Peru', 'Phone: +51 1 2345678');
 
   storesArray.push(seattle, tokyo, dubai, paris, lima);
 
-  // seattle.render();
-  // tokyo.render();
-  // dubai.render();
-  // paris.render();
-  // lima.render();
-
   for (let store of storesArray) {
     store.simulateHourlySales();
-  }
-
+  }  
+  
   let table = document.createElement('table');
   storeSection.appendChild(table);
 
-  // Render header only once
   seattle.renderTableHeader(table);
 
   for (let store of storesArray) {
@@ -166,4 +183,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   seattle.renderTableFooter(table);
+
+  for (let store of storesArray) {
+    store.renderDetails();
+  }
 });
