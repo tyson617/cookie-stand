@@ -4,10 +4,43 @@
 
 const storesArray = [];
 const storeSection = document.getElementById('sales');
+const detailsSection = document.getElementById('details');
+
 
 // **** Hours Array ****
 const Hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
 
+// **** Grabbing form for event submission ****
+
+let myForm = document.getElementById('cookieStandForm');
+
+// **** Helper Functions ***
+
+// **** Form submission event listner and handler
+
+function handleSubmit(event) {
+  event.preventDefault();
+  // *** TODO grab values from form
+  let locationName = event.target.locationName.value;
+  let minCustomers = parseInt(event.target.minCustomers.value);
+  let maxCustomers = parseInt(event.target.maxCustomers.value);
+  let avgCookiesPerCustomer = parseFloat(event.target.avgCookiesPerCustomer.value);
+
+  let newStore = new Stores(locationName, minCustomers, maxCustomers, avgCookiesPerCustomer, []);
+
+
+//   // **** TODO create new store with those values
+
+  storesArray.push(newStore);
+  newStore.simulateHourlySales();
+  newStore.renderTableRow(); // Call the renderTableRow method to add the new store to the table
+  newStore.renderTableFooter();
+  // newStore.render();
+  myForm.reset();
+}
+if(myForm){
+  myForm.addEventListener('submit', handleSubmit);
+}
 // **** Constructor Function ****
 
 function Stores(name, minCustomers, maxCustomers, avgCookiesPerCustomer, salesData, hours, address, contactInfo) {
@@ -16,10 +49,10 @@ function Stores(name, minCustomers, maxCustomers, avgCookiesPerCustomer, salesDa
   this.maxCustomers = maxCustomers;
   this.avgCookiesPerCustomer = avgCookiesPerCustomer;
   this.salesData = salesData;
-  this.hours = hours;
+  this.hours = Hours;
   this.address = address;
   this.contactInfo = contactInfo;
-}
+};
 
 // **** Prototype Methods ****
 
@@ -43,17 +76,13 @@ Stores.prototype.calculateTotalCookies = function () {
 };
 
 Stores.prototype.render = function () {
-  this.simulateHourlySales();
-
-  // let table = document.createElement('table');
-  // storeSection.appendChild(table);
-
   this.renderTableHeader();
   this.renderTableRow();
   this.renderTableFooter();
+  this.simulateHourlySales();
 };
 
-Stores.prototype.renderTableHeader = function (table) {
+Stores.prototype.renderTableHeader = function () {
   let headerRow = document.createElement('tr');
   storeSection.appendChild(headerRow);
 
@@ -91,22 +120,43 @@ Stores.prototype.renderTableRow = function () {
 };
 
 Stores.prototype.renderTableFooter = function () {
+  let existingTotalRows = document.querySelectorAll('#sales tr.total-row');
+  for (let row of existingTotalRows) {
+    row.parentNode.removeChild(row);
+  }
+  // Add the new "Total" row
   let footerRow = document.createElement('tr');
+  footerRow.className = 'total-row';
   storeSection.appendChild(footerRow);
-
+  
   let footerCell = document.createElement('td');
   footerCell.textContent = 'Total';
   footerRow.appendChild(footerCell);
-
   for (let hour of this.hours) {
     let footerCell = document.createElement('td');
     footerCell.textContent = this.calculateHourlyTotal(hour);
     footerRow.appendChild(footerCell);
   }
-
   let grandTotalCell = document.createElement('td');
   grandTotalCell.textContent = this.calculateGrandTotal();
   footerRow.appendChild(grandTotalCell);
+  
+  // let footerRow = document.createElement('tr');
+  // storeSection.appendChild(footerRow);
+
+  // let footerCell = document.createElement('td');
+  // footerCell.textContent = 'Total';
+  // footerRow.appendChild(footerCell);
+
+  // for (let hour of this.hours) {
+  //   let footerCell = document.createElement('td');
+  //   footerCell.textContent = this.calculateHourlyTotal(hour);
+  //   footerRow.appendChild(footerCell);
+  // }
+
+  // let grandTotalCell = document.createElement('td');
+  // grandTotalCell.textContent = this.calculateGrandTotal();
+  // footerRow.appendChild(grandTotalCell);
 };
 
 Stores.prototype.getSalesDataForHour = function (hour) {
@@ -135,27 +185,30 @@ Stores.prototype.calculateGrandTotal = function () {
 };
 
 Stores.prototype.renderDetails = function () {
-  let detailsSection = document.getElementById('details');
+  // let detailsSection = document.getElementById('details');
 
-  let article = document.createElement('article');
-  detailsSection.appendChild(article);
+  let storeContainer = document.createElement('div');
+  detailsSection.appendChild(storeContainer);
 
   let heading = document.createElement('h2');
   heading.textContent = this.name;
-  article.appendChild(heading);
+  storeContainer.appendChild(heading);
 
   let addressPara = document.createElement('p');
   addressPara.textContent = `Address: ${this.address}`;
-  article.appendChild(addressPara);
+  storeContainer.appendChild(addressPara);
 
   let hoursPara = document.createElement('p');
   hoursPara.textContent = `Hours Open: ${this.hours[0]} to ${this.hours[this.hours.length - 1]}`;
-  article.appendChild(hoursPara);
+  storeContainer.appendChild(hoursPara);
 
   let contactPara = document.createElement('p');
   contactPara.textContent = `Contact Information: ${this.contactInfo}`;
-  article.appendChild(contactPara);
-}
+  storeContainer.appendChild(contactPara);
+
+  // storeDiv.style.marginBottom = '20px'; // Adjust the value as needed
+
+};
 
 // **** Executable (executes on page load) Code ****
 
@@ -173,18 +226,22 @@ document.addEventListener('DOMContentLoaded', function () {
     store.simulateHourlySales();
   }  
   
-  let table = document.createElement('table');
-  storeSection.appendChild(table);
+  if (storeSection){
+    let table = document.createElement('table');
+    storeSection.appendChild(table);
 
-  seattle.renderTableHeader(table);
+    seattle.renderTableHeader(table);
 
-  for (let store of storesArray) {
-    store.renderTableRow(table);
+    for (let store of storesArray) {
+      store.renderTableRow(table);
+    }
+
+    seattle.renderTableFooter(table);
   }
-
-  seattle.renderTableFooter(table);
-
-  for (let store of storesArray) {
-    store.renderDetails();
+  
+  if (detailsSection) {
+    for (let store of storesArray) {
+      store.renderDetails();
+    }
   }
 });
