@@ -33,9 +33,8 @@ function handleSubmit(event) {
 
   storesArray.push(newStore);
   newStore.simulateHourlySales();
-  newStore.renderTableRow(); // Call the renderTableRow method to add the new store to the table
+  newStore.renderTableRow();
   newStore.renderTableFooter();
-  // newStore.render();
   myForm.reset();
 }
 if(myForm){
@@ -140,23 +139,6 @@ Stores.prototype.renderTableFooter = function () {
   let grandTotalCell = document.createElement('td');
   grandTotalCell.textContent = this.calculateGrandTotal();
   footerRow.appendChild(grandTotalCell);
-  
-  // let footerRow = document.createElement('tr');
-  // storeSection.appendChild(footerRow);
-
-  // let footerCell = document.createElement('td');
-  // footerCell.textContent = 'Total';
-  // footerRow.appendChild(footerCell);
-
-  // for (let hour of this.hours) {
-  //   let footerCell = document.createElement('td');
-  //   footerCell.textContent = this.calculateHourlyTotal(hour);
-  //   footerRow.appendChild(footerCell);
-  // }
-
-  // let grandTotalCell = document.createElement('td');
-  // grandTotalCell.textContent = this.calculateGrandTotal();
-  // footerRow.appendChild(grandTotalCell);
 };
 
 Stores.prototype.getSalesDataForHour = function (hour) {
@@ -185,7 +167,6 @@ Stores.prototype.calculateGrandTotal = function () {
 };
 
 Stores.prototype.renderDetails = function () {
-  // let detailsSection = document.getElementById('details');
 
   let storeContainer = document.createElement('div');
   detailsSection.appendChild(storeContainer);
@@ -205,8 +186,6 @@ Stores.prototype.renderDetails = function () {
   let contactPara = document.createElement('p');
   contactPara.textContent = `Contact Information: ${this.contactInfo}`;
   storeContainer.appendChild(contactPara);
-
-  // storeDiv.style.marginBottom = '20px'; // Adjust the value as needed
 
 };
 
